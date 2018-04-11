@@ -2,14 +2,15 @@
 
 ## Introduction ##
 
-WebUSB is a Web API that allows web pages to access connected USB devices with
-the user?s permission. At the moment, WebUSB is only available in the main frame
-and cannot be accessed by workers. This is a problem for multi-window Web apps
-because they need to request access to the device for each open page.
-Additionally, all of the I/O operations performed on the USB device is done on
-the render process main thread. Therefore, this proposal is to allow WebUSB to
-be accessed within Workers so that pages can share device access and perform I/O
-operations on the device on a separate thread.
+[WebUSB](https://wicg.github.io/webusb/) is a Web API that allows web pages to
+access connected USB devices with the user's permission. At the moment, WebUSB
+is only available in the main thread and cannot be accessed by
+[Web Workers](https://w3c.github.io/workers/). This is a problem for
+multi-window Web apps because they need to request access to the device for
+each open page. Additionally, all of the I/O operations performed on the USB
+device is done on the render process main thread. Therefore, this proposal is
+to allow WebUSB to be accessed within Workers so that pages can share device
+access and perform I/O operations on the device on a separate thread.
 
 ## Goals ##
 
@@ -51,7 +52,7 @@ page, meaning that the page will not be slowed by heavy I/O operations.
 
 ## Example ##
 
-TODO(odejesush): Add example code or link to example.
+TODO(odejesush): Add an example.
 
 ## Design Alternatives ##
 
