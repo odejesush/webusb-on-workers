@@ -49,7 +49,7 @@ The page has to request a device using `requestDevice` in order to receive
 permission for the origin to use the device. Once permission has been granted,
 the Web Worker can use `getDevices` to select a device from the list of devices
 that the origin has access to. The Web Worker can then open the device and
-perform I/O operations on it. On a `DedicatedWorker, these operations can occur
+perform I/O operations on it. On a `DedicatedWorker`, these operations can occur
 asynchronously from the page, meaning that the page will not be slowed by heavy
 I/O operations. On a `SharedWorker`, control of the device can be shared with
 multiple pages from the same origin.
