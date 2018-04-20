@@ -60,15 +60,34 @@ TODO(odejesush): Add an example.
 
 ## Design Alternatives ##
 
-Instead of enabling WebUSB to be accessed from AbstractWorker, only allow the
-API to be accessed from a SharedWorker. This approach would allow pages from the
-same origin to share devices. However, exposing WebUSB to the
-SharedWorkerGlobalScope could result in additional complexity, since
-SharedWorkerGlobalScope inherits the WorkerNavigator object from AbstractWorker.
-Additionally, we lose the benefit of allowing WebUSB operations to be performed
-on a separate thread with DedicatedWorkers.
+The original idea was to allow only Shared Workers to use the WebUSB API.
+However, allowing WebUSB to be used in a Dedicated Worker is also beneficial to
+allow heavy I/O operations on a USB device to be offloaded to a worker thread.
+Additionally, enabling the API to be used in a Dedicated Worker is as simple as
+enabling the API to be used in a Shared Worker.
 
-Another alternative design approach that was considered was to expose WebUSB API
-including requestDevice to the WorkerGlobalScope. This approach would require
-dealing with how the chooser prompt for selecting a USB device to connect to
-should be displayed when used within a SharedWorker
+Another alternative design approach that was considered was to expose the entire
+WebUSB API to the `DedicatedWorkerGlobalScope` and `SharedWorkerGlobalScope`.
+This approach would require dealing with how the chooser prompt for selecting a
+USB device to connect to should be displayed when used within a worker,
+especially a Shared Worker which can contain multiple pages connected to it.
+There would also be additional complexity in sending the request to show the
+chooser from a worker thread to the main thread that contains the page.
+
+The initial approach to allowing WebUSB to be used within the context of a
+Dedicated Worker and Shared Worker was to create a base interface class called
+`WindowOrWorkerUSB` that contained the attributes and methods of `USB` minus
+`requestDevice()`. Then the existing `USB` class will contain only the
+`requestDevice()` method and inherit from the newly created `WindowOrWorkerUSB`
+interface. The `WorkerNavigator` interface would then use the
+`WindowOrWorkerUSB` interface to expose the API to workers.
+
+This idea was then changed to rename `USB` to `WindowUSB` and create a new
+interface called `WorkerUSB` that inherits from `WindowOrWorkerUSB`. These new
+interfaces would be added to the corresponding navigator interface. This
+approach would have broken any existing implementations of WebUSB that use
+`navigator.usb instanceof USB` to check if WebUSB is enabled. The whole idea of
+creating a base `WindowOrWorkerUSB` interface was scrapped after learning that
+extended attributes can be used to determine specific contexts in which an
+interface, attribute, or method can be exposed in, therefore significantly
+reducing the complexity of the implementation.
