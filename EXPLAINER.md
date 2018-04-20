@@ -40,15 +40,19 @@ from the device in real time without blocking the page.
 
 ## Solution ##
 
-A new WorkerUSB object that contains all of the WebUSB API minus requestDevice
-can be defined in the WorkerGlobalScope to allow for Web Workers to access
-connected USB devices that the page origin has access to. The page has to
-request a device using requestDevice in order to receive permission for the
-origin to use the device. Once permission has been granted, the Web Worker can
-use getDevices to select a device from the list of devices that the origin has
-access to. The Web Worker can then open the device and perform I/O operations on
-it. On a DedicatedWorker, these operations can occur asynchronously from the
-page, meaning that the page will not be slowed by heavy I/O operations.
+The IDL for USB will include the `Exposed=(DedicatedWorker,SharedWorker,Window)`
+extended attribute to specify the contexts in which the API should be accessible
+from. The `requestDevice` method will also have the `Exposed=Window` extended
+attribute so that the method is only accessible within the Window context.
+
+The page has to request a device using `requestDevice` in order to receive
+permission for the origin to use the device. Once permission has been granted,
+the Web Worker can use `getDevices` to select a device from the list of devices
+that the origin has access to. The Web Worker can then open the device and
+perform I/O operations on it. On a `DedicatedWorker, these operations can occur
+asynchronously from the page, meaning that the page will not be slowed by heavy
+I/O operations. On a `SharedWorker`, control of the device can be shared with
+multiple pages from the same origin.
 
 ## Example ##
 
