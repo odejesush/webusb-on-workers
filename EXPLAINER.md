@@ -104,13 +104,13 @@ can be sent to the document via postMessage and displayed on the document.
 
       // Read data from the connected device.
       function readDevice() {
-        deviceWorker.postMessage({action: ‘read-device’});
+        deviceWorker.postMessage({action: 'read-device'});
       }
     </script>
   </head>
   <body>
-    <button onclick=”connectToDevice()”>Connect Device</button>
-    <button onclick=”readDevice()”>Read Device</button>
+    <button onclick="connectToDevice()">Connect Device</button>
+    <button onclick="readDevice()">Read Device</button>
     <p>Device Output</p>
     <pre id="log"></pre>
     <script>
